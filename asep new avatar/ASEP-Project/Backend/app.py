@@ -7,15 +7,15 @@ app = Flask(__name__)
 CORS(app)  # Enables communication between frontend and backend
 
 # Initialize Gemini
-GOOGLE_API_KEY = ''  # Replace with your actual API key
+GOOGLE_API_KEY = 'AIzaSyCfgPZn0kZZPmk5eaaVvlkR-SrGH2rXH4k'  # Replace with your actual API key
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-pro')  # Change model to gemini-pro
+model = genai.GenerativeModel('gemini-2.0-flash')  # Change model to gemini-pro
 
 # Database connection
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="",
+    password="WWWase@2006",
     database="NutriCheck"  # Correct database name
 )
 
