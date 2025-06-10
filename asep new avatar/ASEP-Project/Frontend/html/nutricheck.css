@@ -25,6 +25,47 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
+/* Dark mode specific overrides */
+[data-theme="dark"] body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] #home {
+    background: linear-gradient(to right, #2d2d2d, #1a1a1a);
+}
+
+[data-theme="dark"] #features {
+    background: #2d2d2d;
+}
+
+[data-theme="dark"] #login {
+    background: rgba(45, 45, 45, 0.9);
+}
+
+[data-theme="dark"] #login form input {
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-color);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] #login form input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] #scanner {
+    background: var(--surface-color);
+}
+
+[data-theme="dark"] #aadharTable {
+    background: rgba(45, 45, 45, 0.9);
+}
+
+[data-theme="dark"] #aadharTable td {
+    color: var(--text-color);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
 /* General Reset */
 * {
     margin: 0;
