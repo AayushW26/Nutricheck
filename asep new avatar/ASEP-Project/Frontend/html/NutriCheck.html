@@ -10,6 +10,11 @@
     <script src="../Javascript/nutricheck.js" defer></script>
     <script src="../Javascript/scanner.js" defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
 <body>
     <div class="theme-toggle">
@@ -28,6 +33,7 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#about">About</a></li>
+                    <li><a href="#chatSection">Nutribot</a></li>
                     <li><a href="#login">Login</a></li>
                 </ul>
             </nav>
@@ -59,7 +65,7 @@
                 <h2>Welcome to NutriCheck</h2>
                 <img src="./nutricheck logo.jpg" width="400" height="400"/>
                 <p>Your ultimate health companion for making smarter, informed food choices. Scan barcodes, check nutritional details, and discover healthier alternatives—all in one app.</p>
-                <button id="scanNowBtn" class="btn">Scan Now</button>
+                <button id="scanNowBtn" class="btn" onclick="document.getElementById('chatSection').scrollIntoView()">Scan Now</button>
             </div>
         </section>
 
