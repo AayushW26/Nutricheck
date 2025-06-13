@@ -669,11 +669,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 categoryDiv.innerHTML = `
                     <h4>${categoryIcons[category] || '📋'} ${category}</h4>
                     <div class="ingredient-items">
-                        ${items.map(item => `
-                            <div class="ingredient-item">
-                                <span class="ingredient-name">${item}</span>
-                            </div>
-                        `).join('')}
+                        ${items.map(item => {
+                            const itemName = typeof item === 'string' ? item : item.name;
+                            const isHarmful = HARMFUL_INGREDIENTS[itemName] || 
+                                            Object.entries(HARMFUL_INGREDIENTS).find(([key]) => 
+                                                itemName.toLowerCase().includes(key.toLowerCase()))?.[1];
+                            
+                            return `
+                                <div class="ingredient-item ${isHarmful ? 'harmful' : ''}">
+                                    <span class="ingredient-name">${itemName}</span>
+                                    ${isHarmful ? `<div class="ingredient-warning">⚠️ Warning: ${isHarmful}</div>` : ''}
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                 `;
                 ingredientsList.appendChild(categoryDiv);
