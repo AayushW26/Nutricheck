@@ -34,6 +34,27 @@ def get_product():
     product = cursor.fetchone()
 
     if product:
+        # Add ingredient analysis using Gemini
+        ingredients_prompt = f"""Analyze the ingredients in {product['name']} and categorize them into:
+        1. Main Ingredients
+        2. Preservatives
+        3. Food Additives
+        4. Artificial Colors
+        5. Minerals & Vitamins
+        6. Chemicals/Synthetic Ingredients
+        
+        Return the analysis in JSON format with these categories as keys and arrays of ingredients as values.
+        Focus on identifying potentially harmful ingredients and their effects."""
+
+        ingredients_response = model.generate_content(ingredients_prompt)
+        
+        if ingredients_response and hasattr(ingredients_response, 'text'):
+            try:
+                ingredients_analysis = json.loads(ingredients_response.text.strip('`').replace('json\n', '').replace('\n', ''))
+                product['ingredients_analysis'] = ingredients_analysis
+            except json.JSONDecodeError:
+                product['ingredients_analysis'] = {}
+
         return jsonify(product)
     else:
         return jsonify({"error": "Product not found"}), 404

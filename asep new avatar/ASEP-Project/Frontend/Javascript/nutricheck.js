@@ -87,6 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     scanNowBtn.addEventListener('click', () => {
         scannerSection.classList.remove('hidden');
+        // Add smooth scroll to scanner section
+        scannerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         initializeScanner();
     });
 
@@ -444,7 +446,11 @@ document.addEventListener("DOMContentLoaded", () => {
                          <p><strong>Alternative:</strong> ${data.alternative}</p>               
                     </div>`;
                     
-                    // Create visualization
+                    // Display ingredients analysis
+                    if (data.ingredients_analysis) {
+                        displayIngredients(data.ingredients_analysis);
+                    }
+
                     createNutrientsPieChart(data);
                     displayNutrientAlerts(data);
                 }
@@ -481,6 +487,17 @@ document.addEventListener("DOMContentLoaded", () => {
             // Create visualization for search results
             createNutrientsPieChart(data, 'searchNutrientsPieChart');
             displayNutrientAlerts(data, 'searchNutrientAlerts');
+            
+            // Display ingredients for search results
+            if (data.ingredients) {
+                const searchIngredientsAnalysis = {
+                    'Main Ingredients': data.ingredients.filter(i => i.category === 'Main ingredients').map(i => i.name),
+                    'Preservatives': data.ingredients.filter(i => i.category === 'Preservatives').map(i => i.name),
+                    'Food Additives': data.ingredients.filter(i => i.category === 'Additives').map(i => i.name),
+                    'Minerals & Vitamins': data.ingredients.filter(i => i.category === 'Vitamins and minerals').map(i => i.name)
+                };
+                displayIngredients(searchIngredientsAnalysis, 'searchIngredientsList');
+            }
             
             // Show results section with animation
             searchResult.classList.remove('hidden');
@@ -576,6 +593,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span>${level.toUpperCase()}</span>
             `;
             alertsContainer.appendChild(alert);
+        });
+    }
+
+    // Update displayIngredients to accept a target container ID
+    function displayIngredients(ingredients, targetId = 'ingredientsList') {
+        const ingredientsList = document.getElementById(targetId);
+        if (!ingredientsList) return;
+        
+        ingredientsList.innerHTML = '';
+
+        const categoryIcons = {
+            'Main Ingredients': '🥗',
+            'Preservatives': '⚠️',
+            'Food Additives': '🔬',
+            'Artificial Colors': '🎨',
+            'Minerals & Vitamins': '💊',
+            'Chemicals/Synthetic Ingredients': '⚗️'
+        };
+
+        Object.entries(ingredients).forEach(([category, items]) => {
+            if (items && items.length > 0) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'ingredient-category';
+                categoryDiv.innerHTML = `
+                    <h4>${categoryIcons[category] || '📋'} ${category}</h4>
+                    <div class="ingredient-items">
+                        ${items.map(item => `
+                            <div class="ingredient-item">
+                                <span class="ingredient-name">${item}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                ingredientsList.appendChild(categoryDiv);
+            }
         });
     }
 });
