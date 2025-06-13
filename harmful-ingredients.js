@@ -1,44 +1,59 @@
 const HARMFUL_INGREDIENTS = {
     // Artificial Sweeteners
-    'Aspartame': 'Linked to headaches, depression, nausea, mental confusion, liver/kidney diseases, visual disturbances, and tumors.',
-    'Acesulfame Potassium': 'Contains methylene chloride (carcinogen). Linked to headaches, depression, nausea, mental confusion, liver/kidney diseases.',
-    'Neotame': 'More toxic than aspartame, potential carcinogen with long-term exposure.',
-    'Sucralose': 'Under study for long-term health impacts.',
+    'High Fructose Corn Syrup': 'Linked to obesity, Type 2 Diabetes, cardiovascular diseases, and non-alcoholic fatty liver disease.',
+    'HFCS': 'Linked to obesity, Type 2 Diabetes, cardiovascular diseases, and non-alcoholic fatty liver disease.',
+    'Aspartame': 'May cause headaches, digestive issues; not recommended for children.',
+    'Sucralose': 'May alter gut microbiome; long-term effects under study.',
+    'Acesulfame Potassium': 'Contains methylene chloride; may cause headaches and other symptoms.',
+    
+    // Trans Fats
+    'Partially Hydrogenated': 'Contains trans fats linked to heart disease and increased bad cholesterol.',
+    'Vanaspati': 'High in trans fats; linked to heart disease and increased bad cholesterol.',
+    
+    // Refined Ingredients
+    'Maida': 'Refined flour lacking fiber; can contribute to blood sugar spikes and digestive issues.',
+    'Refined Flour': 'Lacks fiber; can contribute to blood sugar spikes and digestive issues.',
+    
+    // Preservatives
+    'MSG': 'May cause headaches, sweating, and digestive upset in sensitive individuals.',
+    'Monosodium Glutamate': 'May cause headaches, sweating, and digestive upset in sensitive individuals.',
+    'Sodium Benzoate': 'Can form carcinogenic benzene when combined with Vitamin C; may cause allergic reactions.',
+    'BHA': 'Potential endocrine disruptor; possible carcinogenic effects in high doses.',
+    'BHT': 'Potential endocrine disruptor; possible carcinogenic effects in high doses.',
+    'TBHQ': 'Linked to stomach tumors and DNA damage in lab studies.',
     
     // Food Colors
-    'Brilliant Blue FCF': 'Known to cause chromosomal damage. Banned in France, Finland.',
-    'Allura Red AC': 'Linked to chromosomal damage, lymphomas, and hyperactivity.',
-    'Fast Green FCF': 'Known to cause bladder tumors. Banned in several European countries.',
-    'Sunset Yellow FCF': 'Linked to chromosomal damage, hyperactivity, asthma, allergies, thyroid tumors.',
-    'Tartrazine': 'Can cause allergic reactions, especially in asthmatics.',
+    'Tartrazine': 'Can cause allergic reactions and behavioral issues in children.',
+    'Sunset Yellow FCF': 'Linked to hyperactivity and allergic reactions.',
+    'Ponceau 4R': 'May cause allergic reactions and behavioral issues.',
+    'Brilliant Blue FCF': 'Known to cause chromosomal damage.',
+    'Allura Red AC': 'Linked to chromosomal damage and hyperactivity.',
+    'Fast Green FCF': 'Known to cause bladder tumors.',
     
-    // Preservatives & Antioxidants
-    'MSG': 'Can cause Chinese Restaurant Syndrome symptoms including burning sensations, weakness, headaches.',
-    'Monosodium Glutamate': 'Can cause Chinese Restaurant Syndrome symptoms including burning sensations, weakness, headaches.',
-    'Sulfur Dioxide': 'Can cause severe reactions in asthmatics.',
-    'Sodium Sulfite': 'Can cause severe reactions in asthmatics.',
-    'Potassium Metabisulfite': 'Can cause severe reactions in asthmatics.',
-    'BHA': 'Affects neurological system, linked to cancer. Banned in UK, Japan.',
-    'BHT': 'Affects neurological system, linked to cancer. Banned in UK, Japan.',
-    'TBHQ': 'Linked to stomach tumors and DNA damage in lab studies.',
-    'Sodium Benzoate': 'Can cause allergic reactions and form carcinogenic benzene with Vitamin C.',
-    'Potassium Bromate': 'Banned by FSSAI due to carcinogenic effects.',
-    'Propyl Gallate': 'Prolonged use may cause cancer.',
+    // Common Additives
+    'Potassium Bromate': 'BANNED by FSSAI due to carcinogenic effects.',
+    'Azodicarbonamide': 'Linked to respiratory issues and allergies.',
+    'Sodium Metabisulfite': 'Can cause severe reactions in asthmatics.',
+    'Propyl Gallate': 'Long-term use may increase cancer risk.',
     
-    // Other
-    'Azodicarbonamide': 'Linked to skin irritation, respiratory issues, hormonal imbalance. Banned in Europe.',
-    'Formalin': 'Toxic and carcinogenic chemical.',
-    'Olestra': 'Negates vitamin absorption. Banned in UK, Canada.',
+    // Contaminants to Watch For
+    'Lead': 'Toxic heavy metal; can cause neurological damage.',
+    'Arsenic': 'Toxic heavy metal; can cause various health issues.',
+    'Mercury': 'Toxic heavy metal; causes neurological damage.',
+    'Cadmium': 'Toxic heavy metal; affects kidneys and bones.',
+    'Aflatoxins': 'Naturally occurring toxins; highly carcinogenic.',
+    'Patulin': 'Mycotoxin found in apple products; toxic.',
+    'Ochratoxin A': 'Mycotoxin found in grains; toxic to kidneys.',
     
-    // Common Additives (INS Numbers)
-    'INS 133': 'Brilliant Blue FCF - Known to cause chromosomal damage.',
-    'INS 129': 'Allura Red AC - Linked to chromosomal damage and hyperactivity.',
-    'INS 143': 'Fast Green FCF - Known to cause bladder tumors.',
-    'INS 110': 'Sunset Yellow FCF - Linked to various health issues.',
-    'INS 102': 'Tartrazine - Can cause allergic reactions.',
-    'INS 621': 'MSG - Associated with various adverse reactions.',
-    'INS 320': 'BHA - Linked to neurological effects and cancer.',
-    'INS 321': 'BHT - Linked to neurological effects and cancer.',
+    // INS Numbers
+    'INS 621': 'MSG - May cause adverse reactions in sensitive individuals.',
+    'INS 211': 'Sodium Benzoate - Potential allergen and can form harmful compounds.',
+    'INS 320': 'BHA - Possible carcinogenic effects.',
+    'INS 321': 'BHT - Possible carcinogenic effects.',
     'INS 319': 'TBHQ - Linked to stomach tumors.',
-    'INS 211': 'Sodium Benzoate - Can form carcinogenic compounds.'
+    'INS 102': 'Tartrazine - Can cause allergic reactions.',
+    'INS 110': 'Sunset Yellow - Linked to hyperactivity.',
+    'INS 133': 'Brilliant Blue FCF - May cause chromosomal damage.',
+    'INS 129': 'Allura Red - Linked to hyperactivity.',
+    'INS 143': 'Fast Green FCF - Known to cause tumors.'
 };
