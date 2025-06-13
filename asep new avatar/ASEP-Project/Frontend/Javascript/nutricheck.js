@@ -291,23 +291,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>`;
                 } else {
                     resultElement.innerHTML = `<div class="scan-success">
-                        <h3>Product Found!</h3>
-                        <p><strong>Name:</strong> ${data.name}</p>
-                        <p><strong>Calories:</strong> ${data.calories}</p>
-                        <p><strong>Proteins:</strong> ${data.protein}g</p>
-                        <p><strong>Fats:</strong> ${data.fat}g</p>
-                        <p><strong>fiber:</strong> ${data.fiber}g</p>
-                        <p><strong>Sugar:</strong> ${data.sugar}g</p>
-                        <p><strong>Sodium:</strong> ${data.sodium}g</p>
-                        <p><strong>Carbohydrates:</strong> ${data.carbohydrates}g</p> 
-                        <p><strong>Analysis:</strong> ${data.analysis}</p> 
-                        <p><strong>Allergen:</strong> ${data.allergen}</p>     
-                         <p><strong>Alternative:</strong> ${data.alternative}</p>               
+                        <h3>${data.name || 'Product Found'}</h3>
+                        <div class="product-details">
+                            <div class="nutrition-facts">
+                                <h4>Nutrition Facts</h4>
+                                <p><strong>Calories:</strong> ${data.calories || 0} kcal</p>
+                                <p><strong>Proteins:</strong> ${data.protein || 0}g</p>
+                                <p><strong>Carbohydrates:</strong> ${data.carbohydrates || 0}g</p>
+                                <p><strong>Fats:</strong> ${data.fat || 0}g</p>
+                                <p><strong>Fiber:</strong> ${data.fiber || 0}g</p>
+                                <p><strong>Sugar:</strong> ${data.sugar || 0}g</p>
+                                <p><strong>Sodium:</strong> ${data.sodium || 0}mg</p>
+                            </div>
+                            <div class="product-analysis">
+                                <h4>Analysis</h4>
+                                <p>${data.analysis || 'No analysis available'}</p>
+                                <h4>Allergens</h4>
+                                <p>${data.allergen || 'No allergens listed'}</p>
+                                <h4>Healthier Alternatives</h4>
+                                <p>${data.alternative || 'No alternatives suggested'}</p>
+                            </div>
+                        </div>
                     </div>`;
+
+                    // Update visualizations
+                    if (isValidNutritionData(data)) {
+                        createNutrientsPieChart(data, 'nutrientsPieChart');
+                        displayNutrientAlerts(data, 'nutrientAlerts');
+                    }
+
+                    // Show nutrition visualization section
+                    document.querySelector('.nutrition-visualization').style.display = 'block';
                 }
             })
             .catch(error => {
-                resultElement.innerHTML = `<p>Error fetching product details.</p>`;
+                resultElement.innerHTML = `<div class="scan-error">
+                    <h3>Error</h3>
+                    <p>Failed to fetch product details. Please try again.</p>
+                </div>`;
                 console.error("Error fetching product:", error);
             });
    
@@ -421,46 +442,75 @@ document.addEventListener("DOMContentLoaded", () => {
     function handleScanSuccess(decodedText) {
         id = decodedText;
         const resultElement = document.getElementById('scanResult');
+        console.log("Scanning barcode:", id); // Debug log
 
         fetch(`http://127.0.0.1:5000/get_product?barcode=${id}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log("Received data:", data); // Debug log
                 if (data.error) {
                     resultElement.innerHTML = `<div class="scan-error">
                         <h3>Product Not Found</h3>
                         <p>No product details available for barcode: ${id}</p>
                     </div>`;
                 } else {
+                    // Create product info section
                     resultElement.innerHTML = `<div class="scan-success">
-                        <h3>Product Found!</h3>
-                        <p><strong>Name:</strong> ${data.name}</p>
-                        <p><strong>Calories:</strong> ${data.calories}</p>
-                        <p><strong>Proteins:</strong> ${data.protein}g</p>
-                        <p><strong>Fats:</strong> ${data.fat}g</p>
-                        <p><strong>fiber:</strong> ${data.fiber}g</p>
-                        <p><strong>Sugar:</strong> ${data.sugar}g</p>
-                        <p><strong>Sodium:</strong> ${data.sodium}g</p>
-                        <p><strong>Carbohydrates:</strong> ${data.carbohydrates}g</p> 
-                        <p><strong>Analysis:</strong> ${data.analysis}</p> 
-                        <p><strong>Allergen:</strong> ${data.allergen}</p>     
-                         <p><strong>Alternative:</strong> ${data.alternative}</p>               
+                        <h3>${data.name || 'Product Found'}</h3>
+                        <div class="product-details">
+                            <div class="nutrition-facts">
+                                <h4>Nutrition Facts</h4>
+                                <p><strong>Calories:</strong> ${data.calories || 0} kcal</p>
+                                <p><strong>Proteins:</strong> ${data.protein || 0}g</p>
+                                <p><strong>Carbohydrates:</strong> ${data.carbohydrates || 0}g</p>
+                                <p><strong>Fats:</strong> ${data.fat || 0}g</p>
+                                <p><strong>Fiber:</strong> ${data.fiber || 0}g</p>
+                                <p><strong>Sugar:</strong> ${data.sugar || 0}g</p>
+                                <p><strong>Sodium:</strong> ${data.sodium || 0}mg</p>
+                            </div>
+                            <div class="product-analysis">
+                                <h4>Analysis</h4>
+                                <p>${data.analysis || 'No analysis available'}</p>
+                                <h4>Allergens</h4>
+                                <p>${data.allergen || 'No allergens listed'}</p>
+                                <h4>Healthier Alternatives</h4>
+                                <p>${data.alternative || 'No alternatives suggested'}</p>
+                            </div>
+                        </div>
                     </div>`;
-                    
-                    // Display ingredients analysis
-                    if (data.ingredients_analysis) {
-                        displayIngredients(data.ingredients_analysis);
+
+                    // Update visualizations
+                    if (isValidNutritionData(data)) {
+                        createNutrientsPieChart(data, 'nutrientsPieChart');
+                        displayNutrientAlerts(data, 'nutrientAlerts');
                     }
 
-                    createNutrientsPieChart(data);
-                    displayNutrientAlerts(data);
+                    // Show nutrition visualization section
+                    document.querySelector('.nutrition-visualization').style.display = 'block';
                 }
             })
             .catch(error => {
-                resultElement.innerHTML = `<p>Error fetching product details.</p>`;
+                resultElement.innerHTML = `<div class="scan-error">
+                    <h3>Error</h3>
+                    <p>Failed to fetch product details. Please try again.</p>
+                </div>`;
                 console.error("Error fetching product:", error);
             });
 
         html5QrCode.stop();
+    }
+
+    function isValidNutritionData(data) {
+        return data && typeof data === 'object' &&
+               !isNaN(parseFloat(data.calories)) &&
+               !isNaN(parseFloat(data.protein)) &&
+               !isNaN(parseFloat(data.carbohydrates)) &&
+               !isNaN(parseFloat(data.fat));
     }
 
     // Product Search Implementation

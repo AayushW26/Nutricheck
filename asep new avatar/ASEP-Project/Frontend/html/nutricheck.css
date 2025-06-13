@@ -1060,6 +1060,37 @@ footer {
     background: rgba(0, 0, 0, 0.2);
 }
 
+.product-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.nutrition-facts, .product-analysis {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nutrition-facts h4, .product-analysis h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.nutrition-facts p, .product-analysis p {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+[data-theme="dark"] .nutrition-facts,
+[data-theme="dark"] .product-analysis {
+    background: rgba(45, 45, 45, 0.9);
+    color: var(--text-color);
+}
+
 
 
 

@@ -12,52 +12,83 @@ GOOGLE_API_KEY = 'AIzaSyCfgPZn0kZZPmk5eaaVvlkR-SrGH2rXH4k'  # Replace with your 
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')  # Change model to gemini-pro
 
-# Database connection
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="WWWase@2006",
-    database="NutriCheck"  # Correct database name
-)
+# Update database connection to use connection pooling
+db_config = {
+    "host": "localhost",
+    "user": "root",
+    "password": "WWWase@2006",
+    "database": "NutriCheck"
+}
 
-cursor = db.cursor(dictionary=True)
+def get_db_connection():
+    try:
+        connection = mysql.connector.connect(**db_config)
+        return connection
+    except mysql.connector.Error as err:
+        print(f"Database connection error: {err}")
+        return None
 
 @app.route('/get_product', methods=['GET'])
 def get_product():
-    barcode = request.args.get('barcode')
-    
-    if not barcode:
-        return jsonify({"error": "No barcode provided"}), 400
-
-    query = "SELECT * FROM Food_Nutrients WHERE barcode = %s"
-    cursor.execute(query, (barcode,))
-    product = cursor.fetchone()
-
-    if product:
-        # Add ingredient analysis using Gemini
-        ingredients_prompt = f"""Analyze the ingredients in {product['name']} and categorize them into:
-        1. Main Ingredients
-        2. Preservatives
-        3. Food Additives
-        4. Artificial Colors
-        5. Minerals & Vitamins
-        6. Chemicals/Synthetic Ingredients
+    try:
+        barcode = request.args.get('barcode')
+        print(f"Received barcode: {barcode}")  # Debug print
         
-        Return the analysis in JSON format with these categories as keys and arrays of ingredients as values.
-        Focus on identifying potentially harmful ingredients and their effects."""
+        if not barcode:
+            return jsonify({"error": "No barcode provided"}), 400
 
-        ingredients_response = model.generate_content(ingredients_prompt)
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({"error": "Database connection failed"}), 500
+
+        cursor = connection.cursor(dictionary=True)
         
-        if ingredients_response and hasattr(ingredients_response, 'text'):
-            try:
-                ingredients_analysis = json.loads(ingredients_response.text.strip('`').replace('json\n', '').replace('\n', ''))
-                product['ingredients_analysis'] = ingredients_analysis
-            except json.JSONDecodeError:
-                product['ingredients_analysis'] = {}
+        # Updated query with proper column names
+        query = """
+            SELECT name, barcode, calories, protein, carbohydrates, 
+                   fat, fiber, sugar, sodium, analysis, allergen, alternative
+            FROM Food_Nutrients 
+            WHERE barcode = %s
+        """
+        cursor.execute(query, (barcode,))
+        product = cursor.fetchone()
+        
+        print(f"Query result: {product}")  # Debug print
+        
+        if product:
+            # Add ingredient analysis using Gemini
+            ingredients_prompt = f"""Analyze the ingredients in {product.get('name', 'this product')} and categorize them into:
+            1. Main Ingredients
+            2. Preservatives
+            3. Food Additives
+            4. Artificial Colors
+            5. Minerals & Vitamins
+            6. Chemicals/Synthetic Ingredients"""
 
-        return jsonify(product)
-    else:
-        return jsonify({"error": "Product not found"}), 404
+            ingredients_response = model.generate_content(ingredients_prompt)
+            
+            if ingredients_response and hasattr(ingredients_response, 'text'):
+                try:
+                    ingredients_analysis = json.loads(ingredients_response.text.strip('`').replace('json\n', '').replace('\n', ''))
+                    product['ingredients_analysis'] = ingredients_analysis
+                except json.JSONDecodeError:
+                    product['ingredients_analysis'] = {}
+            
+            return jsonify(product)
+        else:
+            return jsonify({"error": "Product not found"}), 404
+
+    except mysql.connector.Error as err:
+        print(f"Database error: {err}")  # Debug print
+        return jsonify({"error": f"Database error: {str(err)}"}), 500
+    except Exception as e:
+        print(f"General error: {e}")  # Debug print
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
 
 @app.route('/chat', methods=['POST'])
 def chat():
