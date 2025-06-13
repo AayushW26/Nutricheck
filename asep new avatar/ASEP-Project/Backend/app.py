@@ -87,8 +87,8 @@ def search_product():
         if not product_name:
             return jsonify({"error": "No product name provided"}), 400
 
-        # Create prompt for Gemini
-        prompt = f"""Analyze the nutritional content of {product_name} and provide the following information in JSON format:
+        # Modified prompt to include ingredients
+        prompt = f"""Analyze the nutritional content and ingredients of {product_name} and provide the following information in JSON format:
         - calories (in kcal)
         - protein (in g)
         - carbohydrates (in g)
@@ -97,31 +97,38 @@ def search_product():
         - fiber (in g)
         - sugar (in g)
         - sodium (in mg)
+        - ingredients (as an array of objects with 'name' and 'category' properties)
         
-        Return only the JSON object with these numeric values (no text explanation needed)."""
+        For ingredients, categorize them as:
+        - Main ingredients
+        - Additives
+        - Preservatives
+        - Vitamins and minerals
+        Return only the JSON object with these values."""
 
-        # Generate response using Gemini
         response = model.generate_content(prompt)
         
         if response and hasattr(response, 'text'):
             try:
-                # Clean the response text to get valid JSON
                 json_str = response.text.strip('`').replace('json\n', '').replace('\n', '')
                 nutrients = json.loads(json_str)
                 
-                # Add analysis
-                analysis_prompt = f"""Analyze the following nutritional values for {product_name}:
+                # Add analysis for both nutrients and ingredients
+                analysis_prompt = f"""Analyze the following for {product_name}:
+                1. Nutritional values:
                 Calories: {nutrients.get('calories')} kcal
                 Sugar: {nutrients.get('sugar')}g
                 Sodium: {nutrients.get('sodium')}mg
                 Fat: {nutrients.get('fat')}g
                 Saturated Fat: {nutrients.get('saturated_fat')}g
                 
-                Provide a brief analysis based on FSSAI guidelines:
-                - Total sugar: ≤5g low, 5-10g moderate, >10g high
-                - Sodium: ≤120mg low, 120-300mg moderate, >300mg high
-                - Saturated fat: ≤1.1g low, 1.1-4g moderate, >4g high
-                - Calories: ≤100 kcal low, 100-300 kcal moderate, >300 kcal high"""
+                2. Ingredients composition:
+                {json.dumps(nutrients.get('ingredients', []), indent=2)}
+                
+                Provide analysis based on:
+                - FSSAI guidelines for nutrients
+                - Presence of artificial additives and preservatives
+                - Overall healthiness of ingredients"""
                 
                 analysis_response = model.generate_content(analysis_prompt)
                 nutrients['analysis'] = analysis_response.text if analysis_response else ''

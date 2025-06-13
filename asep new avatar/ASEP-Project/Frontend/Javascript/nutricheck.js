@@ -224,12 +224,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Enhanced message display with animations
+    // Configure marked options
+    marked.setOptions({
+        breaks: true, // Enable line breaks
+        gfm: true,    // Enable GitHub Flavored Markdown
+        sanitize: true // Sanitize HTML input
+    });
+
     function addMessage(message, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chat-message ${isUser ? 'user-message' : 'bot-message'}`;
         messageDiv.style.opacity = '0';
         messageDiv.style.transform = 'translateY(20px)';
-        messageDiv.textContent = message;
+        
+        if (isUser) {
+            messageDiv.textContent = message;
+        } else {
+            const formattedContent = document.createElement('div');
+            formattedContent.className = 'markdown-content';
+            formattedContent.innerHTML = marked.parse(message);
+            messageDiv.appendChild(formattedContent);
+        }
         
         chatMessages.appendChild(messageDiv);
         

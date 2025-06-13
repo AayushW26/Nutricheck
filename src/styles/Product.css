@@ -1,0 +1,18 @@
+.ingredients-section {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.ingredients-section h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.ingredients-text {
+    color: #666;
+    line-height: 1.6;
+    text-align: justify;
+}

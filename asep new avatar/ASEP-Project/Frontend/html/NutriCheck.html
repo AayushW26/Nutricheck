@@ -11,6 +11,7 @@
     <script src="../Javascript/scanner.js" defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         html {
             scroll-behavior: smooth;
@@ -143,6 +144,10 @@
                             <h3>Nutrient Levels</h3>
                             <div id="nutrientAlerts"></div>
                         </div>
+                        <div class="ingredients-container">
+                            <h3>Ingredients</h3>
+                            <div id="ingredientsList"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,6 +198,10 @@
                             <div class="alerts-container">
                                 <h3>Nutrient Levels</h3>
                                 <div id="searchNutrientAlerts"></div>
+                            </div>
+                            <div class="ingredients-container">
+                                <h3>Ingredients</h3>
+                                <div id="searchIngredientsList"></div>
                             </div>
                         </div>
                     </div>
