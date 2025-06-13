@@ -5,6 +5,17 @@ const HARMFUL_INGREDIENTS = {
     'Aspartame': 'May cause headaches, digestive issues; not recommended for children.',
     'Sucralose': 'May alter gut microbiome; long-term effects under study.',
     'Acesulfame Potassium': 'Contains methylene chloride; may cause headaches and other symptoms.',
+    'peanuts': 'Allergen Warning.',
+    'almond': 'Allergen Warning.',
+    'tree nuts': 'Allergen Warning.',
+    'milk': 'Allergen Warning.',
+    'soy': 'Allergen Warning.',
+    'wheat': 'Allergen Warning.',
+    'gluten': 'Allergen Warning.',
+    'eggs': 'Allergen Warning.',
+    'fish': 'Allergen Warning.',
+    'shellfish': 'Allergen Warning.',
+
     
     // Trans Fats
     'Partially Hydrogenated': 'Contains trans fats linked to heart disease and increased bad cholesterol.',
