@@ -611,7 +611,8 @@ footer {
     left: 0;
     width: 100%;
     height: var(--nav-height);
-    background: rgba(255, 255, 255, 0.8);
+    background: #00cec9;
+    color: white;
     backdrop-filter: blur(10px);
     z-index: 1000;
     transition: all 0.3s ease;
@@ -634,7 +635,7 @@ footer {
 }
 
 .nav-link {
-    color: var(--text-color);
+    color: white;
     text-decoration: none;
     font-weight: 500;
     position: relative;
@@ -648,12 +649,12 @@ footer {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--primary-color);
+    background: white;
     transition: width 0.3s ease;
 }
 
-.nav-link:hover::after {
-    width: 100%;
+.logo h1 {
+    color: white;
 }
 
 /* Hero Section */
