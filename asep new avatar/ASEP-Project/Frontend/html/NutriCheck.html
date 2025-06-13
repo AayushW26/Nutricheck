@@ -15,88 +15,103 @@
             scroll-behavior: smooth;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="theme-toggle">
-        <button id="themeToggle">🌓</button>
-    </div>
-
-    <div id="logoutContainer">
-        <button id="logoutBtn">Logout</button>
-    </div>
-
-    <header>
-        <div class="container">
-            <h1>NutriCheck</h1>
-            <nav>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#chatSection">Nutribot</a></li>
-                    <li><a href="#login">Login</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-    
-
-    <section id="login">
-        <div class="container">
-            <h2>User Login</h2>
-            <form id="loginForm">
-                <input type="text" placeholder="Username" required>
-                <input type="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-            </form>
-            <div class="google-login-container">
-                <div id="g_id_onload"
-                    data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                    data-callback="handleGoogleSignIn">
-                </div>
-                <div class="g_id_signin" data-type="standard"></div>
+    <nav class="main-nav">
+        <div class="nav-wrapper">
+            <div class="logo">
+                <h1>NutriCheck</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#chatSection" class="nav-link">Nutribot</a>
+                <a href="#login" class="nav-link login-btn">Login</a>
+            </div>
+            <div class="nav-controls">
+                <button id="themeToggle" class="theme-btn">🌓</button>
+                <div id="logoutContainer"></div>
             </div>
         </div>
-    </section>
+    </nav>
 
-    <div id="mainContent">
-        <section id="home">
-            <div class="container">
-                <h2>Welcome to NutriCheck</h2>
-                <img src="./nutricheck logo.jpg" width="400" height="400"/>
-                <p>Your ultimate health companion for making smarter, informed food choices. Scan barcodes, check nutritional details, and discover healthier alternatives—all in one app.</p>
-                <button id="scanNowBtn" class="btn" onclick="document.getElementById('chatSection').scrollIntoView()">Scan Now</button>
+    <main>
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Your Smart Nutrition Assistant</h1>
+                <p class="hero-text">Make informed food choices with real-time nutritional analysis</p>
+                <div class="hero-cta">
+                    <button id="scanNowBtn" class="cta-button primary">
+                        <span class="button-content">
+                            <i class="fas fa-qrcode"></i>
+                            Start Scanning
+                        </span>
+                    </button>
+                    <a href="#features" class="cta-button secondary">
+                        <span class="button-content">
+                            <i class="fas fa-arrow-right"></i>
+                            Learn More
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="./nutricheck logo.jpg" alt="NutriCheck" />
             </div>
         </section>
 
-        <section id="features">
+        <section id="login">
             <div class="container">
-                <h2>Key Features</h2>
-                <div class="features-list">
-                    <div class="feature-item">
-                        <h3>📷 Barcode Scanning</h3>
-                        <p>Fast and accurate barcode scanning using your device's camera.</p>
+                <h2>User Login</h2>
+                <form id="loginForm">
+                    <input type="text" placeholder="Username" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <div class="google-login-container">
+                    <div id="g_id_onload"
+                        data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                        data-callback="handleGoogleSignIn">
                     </div>
-                    <div class="feature-item">
-                        <h3>💡 Nutritional Insights</h3>
-                        <p>Access real-time details about calories, proteins, fats, and more.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h3>⚠️ Allergen Warnings</h3>
-                        <p>Alerts for potential allergens based on your dietary preferences.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h3>🍎 Healthier Alternatives</h3>
-                        <p>Get recommendations for more nutritious food options okkkkk.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h3>📜 History Tracking</h3>
-                        <p>Save your scans for easy future reference.</p>
-                    </div>
-                    <div class="feature-item">
-                        <h3>🔍 Ingredient Transparency</h3>
-                        <p>Understand what’s in your food with detailed breakdowns.</p>
-                    </div>
+                    <div class="g_id_signin" data-type="standard"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-grid">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-icon">📷</div>
+                    <h3>Smart Scanning</h3>
+                    <p>Instant barcode recognition with AI-powered analysis</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Nutritional Insights</h3>
+                    <p>Access real-time details about calories, proteins, fats, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Allergen Warnings</h3>
+                    <p>Alerts for potential allergens based on your dietary preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍎</div>
+                    <h3>Healthier Alternatives</h3>
+                    <p>Get recommendations for more nutritious food options.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📜</div>
+                    <h3>History Tracking</h3>
+                    <p>Save your scans for easy future reference.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Ingredient Transparency</h3>
+                    <p>Understand what’s in your food with detailed breakdowns.</p>
                 </div>
             </div>
         </section>
@@ -119,41 +134,56 @@
                 <div id="scanResult"></div>
             </div>
         </section>
-    </div>
 
+        <div id="scanResult"></div>
+        <br>
+        <br>
+        <br>
 
-<div id="scanResult"></div>
-<br>
-<br>
-<br>
-
-<section id="chatSection">
-    <div class="container">
-        <h2>Nutrition Assistant</h2>
-        <div id="chatContainer">
-            <div id="chatMessages">
-                <div class="chat-message bot-message">
-                    Hello! I'm your nutrition assistant. How can I help you today?
+        <section id="chatSection">
+            <div class="container">
+                <h2>Nutrition Assistant</h2>
+                <div id="chatContainer">
+                    <div id="chatMessages">
+                        <div class="chat-message bot-message">
+                            Hello! I'm your nutrition assistant. How can I help you today?
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="Ask about nutrition or the scanned product...">
+                        <button id="sendMessage">
+                            <i class="fas fa-paper-plane"></i> Send
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="chat-input">
-                <input type="text" id="userInput" placeholder="Ask about nutrition or the scanned product...">
-                <button id="sendMessage">
-                    <i class="fas fa-paper-plane"></i> Send
-                </button>
+        </section>
+    </main>
+
+    <footer class="modern-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>NutriCheck</h3>
+                <p>Your Health Companion</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#about">About</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>support@nutricheck.com</p>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-
-<footer>
-        <div class="container">
-            <p>Nutricheck</p>
+        <div class="footer-bottom">
+            <p>&copy; 2024 NutriCheck. All rights reserved.</p>
         </div>
-    </footer> 
+    </footer>
+
     <script src="../Javascript/nutricheck.js"></script>
-
-
-
 </body>
 </html>
