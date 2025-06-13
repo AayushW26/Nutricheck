@@ -908,6 +908,46 @@ footer {
     }
 }
 
+/* Search Section Styles */
+.search-section {
+    padding: var(--section-spacing) 2rem;
+    background: linear-gradient(135deg, var(--bg-color), var(--surface-color));
+}
+
+.search-box {
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+#productSearch {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 2px solid rgba(0, 184, 148, 0.2);
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#productSearch:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+}
+
+.search-result {
+    margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.search-result.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 
 

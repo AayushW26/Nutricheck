@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import mysql.connector
 from flask_cors import CORS
 import google.generativeai as genai
+import json
 
 app = Flask(__name__)
 CORS(app)  # Enables communication between frontend and backend
@@ -73,6 +74,67 @@ def chat():
         print(f"Error in chat endpoint: {str(e)}")  # For debugging
         return jsonify({
             "success": False,
+            "error": f"Failed to process request: {str(e)}",
+            "status": 500
+        }), 500
+
+@app.route('/search_product', methods=['POST'])
+def search_product():
+    try:
+        data = request.json
+        product_name = data.get('product')
+        
+        if not product_name:
+            return jsonify({"error": "No product name provided"}), 400
+
+        # Create prompt for Gemini
+        prompt = f"""Analyze the nutritional content of {product_name} and provide the following information in JSON format:
+        - calories (in kcal)
+        - protein (in g)
+        - carbohydrates (in g)
+        - fat (in g)
+        - saturated_fat (in g)
+        - fiber (in g)
+        - sugar (in g)
+        - sodium (in mg)
+        
+        Return only the JSON object with these numeric values (no text explanation needed)."""
+
+        # Generate response using Gemini
+        response = model.generate_content(prompt)
+        
+        if response and hasattr(response, 'text'):
+            try:
+                # Clean the response text to get valid JSON
+                json_str = response.text.strip('`').replace('json\n', '').replace('\n', '')
+                nutrients = json.loads(json_str)
+                
+                # Add analysis
+                analysis_prompt = f"""Analyze the following nutritional values for {product_name}:
+                Calories: {nutrients.get('calories')} kcal
+                Sugar: {nutrients.get('sugar')}g
+                Sodium: {nutrients.get('sodium')}mg
+                Fat: {nutrients.get('fat')}g
+                Saturated Fat: {nutrients.get('saturated_fat')}g
+                
+                Provide a brief analysis based on FSSAI guidelines:
+                - Total sugar: ≤5g low, 5-10g moderate, >10g high
+                - Sodium: ≤120mg low, 120-300mg moderate, >300mg high
+                - Saturated fat: ≤1.1g low, 1.1-4g moderate, >4g high
+                - Calories: ≤100 kcal low, 100-300 kcal moderate, >300 kcal high"""
+                
+                analysis_response = model.generate_content(analysis_prompt)
+                nutrients['analysis'] = analysis_response.text if analysis_response else ''
+                
+                return jsonify(nutrients)
+            except json.JSONDecodeError:
+                return jsonify({"error": "Failed to parse nutrition data"}), 500
+        else:
+            return jsonify({"error": "No response from AI model"}), 500
+            
+    except Exception as e:
+        print(f"Error in search_product endpoint: {str(e)}")
+        return jsonify({
             "error": f"Failed to process request: {str(e)}",
             "status": 500
         }), 500

@@ -441,6 +441,128 @@ document.addEventListener("DOMContentLoaded", () => {
 
         html5QrCode.stop();
     }
+
+    // Product Search Implementation
+    const searchBtn = document.getElementById('searchBtn');
+    const productSearch = document.getElementById('productSearch');
+    const searchResult = document.getElementById('searchResult');
+
+    async function searchProduct(productName) {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/search_product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product: productName })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Create visualization for search results
+            createNutrientsPieChart(data, 'searchNutrientsPieChart');
+            displayNutrientAlerts(data, 'searchNutrientAlerts');
+            
+            // Show results section with animation
+            searchResult.classList.remove('hidden');
+            setTimeout(() => searchResult.classList.add('visible'), 100);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to fetch product information. Please try again.');
+        }
+    }
+
+    searchBtn.addEventListener('click', () => {
+        const product = productSearch.value.trim();
+        if (product) {
+            searchProduct(product);
+        }
+    });
+
+    productSearch.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchBtn.click();
+        }
+    });
+
+    // Modify createNutrientsPieChart to accept chartId parameter
+    function createNutrientsPieChart(data, chartId) {
+        const ctx = document.getElementById(chartId).getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (window.nutrientsChart) {
+            window.nutrientsChart.destroy();
+        }
+
+        window.nutrientsChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Proteins', 'Carbohydrates', 'Fats', 'Fiber'],
+                datasets: [{
+                    data: [
+                        parseFloat(data.protein),
+                        parseFloat(data.carbohydrates),
+                        parseFloat(data.fat),
+                        parseFloat(data.fiber)
+                    ],
+                    backgroundColor: [
+                        '#4CAF50',
+                        '#2196F3',
+                        '#FFC107',
+                        '#9C27B0'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Nutrient Distribution'
+                    }
+                }
+            }
+        });
+    }
+
+    // Modify displayNutrientAlerts to accept containerId parameter
+    function displayNutrientAlerts(data, containerId) {
+        const alertsContainer = document.getElementById(containerId);
+        alertsContainer.innerHTML = '';
+
+        const checkThreshold = (value, thresholds) => {
+            if (value > thresholds.high) return 'high';
+            if (value < thresholds.low) return 'low';
+            return 'moderate';
+        };
+
+        const nutrients = [
+            { name: 'Calories', value: data.calories, unit: 'kcal', threshold: NUTRIENT_THRESHOLDS.calories },
+            { name: 'Sugar', value: data.sugar, unit: 'g', threshold: NUTRIENT_THRESHOLDS.sugar },
+            { name: 'Sodium', value: data.sodium, unit: 'mg', threshold: NUTRIENT_THRESHOLDS.sodium },
+            { name: 'Total Fat', value: data.fat, unit: 'g', threshold: NUTRIENT_THRESHOLDS.fat },
+            { name: 'Saturated Fat', value: data.saturated_fat, unit: 'g', threshold: NUTRIENT_THRESHOLDS.saturated_fat }
+        ];
+
+        nutrients.forEach(nutrient => {
+            const level = checkThreshold(nutrient.value, nutrient.threshold);
+            const alert = document.createElement('div');
+            alert.className = `nutrient-alert alert-${level}`;
+            alert.innerHTML = `
+                <span>${nutrient.name}: ${nutrient.value}${nutrient.unit}</span>
+                <span>${level.toUpperCase()}</span>
+            `;
+            alertsContainer.appendChild(alert);
+        });
+    }
 });
 
 

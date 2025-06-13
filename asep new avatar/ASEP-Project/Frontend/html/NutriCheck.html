@@ -29,6 +29,7 @@
                 <a href="#features" class="nav-link">Features</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#chatSection" class="nav-link">Nutribot</a>
+                <a href="#search" class="nav-link">Search</a>
                 <a href="#login" class="nav-link login-btn">Login</a>
             </div>
             <div class="nav-controls">
@@ -166,6 +167,34 @@
                         <button id="sendMessage">
                             <i class="fas fa-paper-plane"></i> Send
                         </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="search" class="search-section">
+            <div class="container">
+                <h2>Search Product</h2>
+                <div class="search-box">
+                    <input type="text" id="productSearch" placeholder="Enter product name...">
+                    <button id="searchBtn" class="cta-button primary">
+                        <span class="button-content">
+                            <i class="fas fa-search"></i>
+                            Search
+                        </span>
+                    </button>
+                </div>
+                <div id="searchResult" class="search-result hidden">
+                    <div class="nutrition-visualization">
+                        <div class="charts-container">
+                            <div class="chart-wrapper">
+                                <canvas id="searchNutrientsPieChart"></canvas>
+                            </div>
+                            <div class="alerts-container">
+                                <h3>Nutrient Levels</h3>
+                                <div id="searchNutrientAlerts"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
