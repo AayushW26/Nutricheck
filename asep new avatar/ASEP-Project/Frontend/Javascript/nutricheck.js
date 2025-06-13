@@ -319,6 +319,128 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     window.handleGoogleSignIn = handleGoogleSignIn; // Expose to global scope
+
+    const NUTRIENT_THRESHOLDS = {
+        calories: { low: 100, high: 300 },
+        sugar: { low: 5, high: 10 },
+        sodium: { low: 120, high: 300 },
+        fat: { low: 1.1, high: 4 },
+        saturated_fat: { low: 1.1, high: 4 }
+    };
+
+    function createNutrientsPieChart(data) {
+        const ctx = document.getElementById('nutrientsPieChart').getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (window.nutrientsChart) {
+            window.nutrientsChart.destroy();
+        }
+
+        window.nutrientsChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Proteins', 'Carbohydrates', 'Fats', 'Fiber'],
+                datasets: [{
+                    data: [
+                        parseFloat(data.protein),
+                        parseFloat(data.carbohydrates),
+                        parseFloat(data.fat),
+                        parseFloat(data.fiber)
+                    ],
+                    backgroundColor: [
+                        '#4CAF50',
+                        '#2196F3',
+                        '#FFC107',
+                        '#9C27B0'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Nutrient Distribution'
+                    }
+                }
+            }
+        });
+    }
+
+    function displayNutrientAlerts(data) {
+        const alertsContainer = document.getElementById('nutrientAlerts');
+        alertsContainer.innerHTML = '';
+
+        const checkThreshold = (value, thresholds) => {
+            if (value > thresholds.high) return 'high';
+            if (value < thresholds.low) return 'low';
+            return 'moderate';
+        };
+
+        const nutrients = [
+            { name: 'Calories', value: data.calories, unit: 'kcal', threshold: NUTRIENT_THRESHOLDS.calories },
+            { name: 'Sugar', value: data.sugar, unit: 'g', threshold: NUTRIENT_THRESHOLDS.sugar },
+            { name: 'Sodium', value: data.sodium, unit: 'mg', threshold: NUTRIENT_THRESHOLDS.sodium },
+            { name: 'Total Fat', value: data.fat, unit: 'g', threshold: NUTRIENT_THRESHOLDS.fat },
+            { name: 'Saturated Fat', value: data.saturated_fat, unit: 'g', threshold: NUTRIENT_THRESHOLDS.saturated_fat }
+        ];
+
+        nutrients.forEach(nutrient => {
+            const level = checkThreshold(nutrient.value, nutrient.threshold);
+            const alert = document.createElement('div');
+            alert.className = `nutrient-alert alert-${level}`;
+            alert.innerHTML = `
+                <span>${nutrient.name}: ${nutrient.value}${nutrient.unit}</span>
+                <span>${level.toUpperCase()}</span>
+            `;
+            alertsContainer.appendChild(alert);
+        });
+    }
+
+    // Modify existing handleScanSuccess function
+    function handleScanSuccess(decodedText) {
+        id = decodedText;
+        const resultElement = document.getElementById('scanResult');
+
+        fetch(`http://127.0.0.1:5000/get_product?barcode=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultElement.innerHTML = `<div class="scan-error">
+                        <h3>Product Not Found</h3>
+                        <p>No product details available for barcode: ${id}</p>
+                    </div>`;
+                } else {
+                    resultElement.innerHTML = `<div class="scan-success">
+                        <h3>Product Found!</h3>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Calories:</strong> ${data.calories}</p>
+                        <p><strong>Proteins:</strong> ${data.protein}g</p>
+                        <p><strong>Fats:</strong> ${data.fat}g</p>
+                        <p><strong>fiber:</strong> ${data.fiber}g</p>
+                        <p><strong>Sugar:</strong> ${data.sugar}g</p>
+                        <p><strong>Sodium:</strong> ${data.sodium}g</p>
+                        <p><strong>Carbohydrates:</strong> ${data.carbohydrates}g</p> 
+                        <p><strong>Analysis:</strong> ${data.analysis}</p> 
+                        <p><strong>Allergen:</strong> ${data.allergen}</p>     
+                         <p><strong>Alternative:</strong> ${data.alternative}</p>               
+                    </div>`;
+                    
+                    // Create visualization
+                    createNutrientsPieChart(data);
+                    displayNutrientAlerts(data);
+                }
+            })
+            .catch(error => {
+                resultElement.innerHTML = `<p>Error fetching product details.</p>`;
+                console.error("Error fetching product:", error);
+            });
+
+        html5QrCode.stop();
+    }
 });
 
 

@@ -10,6 +10,7 @@
     <script src="../Javascript/nutricheck.js" defer></script>
     <script src="../Javascript/scanner.js" defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         html {
             scroll-behavior: smooth;
@@ -132,6 +133,17 @@
                     <button id="closeScanner" class="scanner-btn">Close Scanner</button>
                 </div>
                 <div id="scanResult"></div>
+                <div class="nutrition-visualization">
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <canvas id="nutrientsPieChart"></canvas>
+                        </div>
+                        <div class="alerts-container">
+                            <h3>Nutrient Levels</h3>
+                            <div id="nutrientAlerts"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 

@@ -821,8 +821,69 @@ footer {
     color: var(--bg-color);
 }
 
-/* Responsive adjustments */
+/* Nutrition Visualization Styles */
+.nutrition-visualization {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.chart-wrapper {
+    background: white;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.alerts-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nutrient-alert {
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.alert-high {
+    background: rgba(255, 99, 132, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(255, 99, 132, 0.2);
+}
+
+.alert-moderate {
+    background: rgba(255, 206, 86, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 206, 86, 0.2);
+}
+
+.alert-low {
+    background: rgba(75, 192, 192, 0.1);
+    color: #28a745;
+    border: 1px solid rgba(75, 192, 192, 0.2);
+}
+
 @media (max-width: 768px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+    
     .nav-links {
         display: none;
     }
